@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urbanrise | Apartment Management</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+
+    <!-- Intro Splash Screen -->
+    <div id="splashScreen" class="splash-screen">
+        <div class="splash-content">
+            <i class="ph-fill ph-buildings splash-icon"></i>
+            <h1 class="splash-title">URBANRISE</h1>
+            <p class="splash-subtitle">Premium Apartment Management</p>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand">
+            <i class="ph-fill ph-buildings"></i>
+            <span>Urbanrise</span>
+            <button class="icon-btn mobile-close-btn"
+                onclick="document.querySelector('.sidebar').classList.remove('open')"
+                style="display: none; margin-left: auto;">
+                <i class="ph ph-x"></i>
+            </button>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active" onclick="navigate('buildings', this)">
+                <i class="ph ph-office-chair"></i>
+                Buildings
+            </a>
+            <a href="#" class="nav-item" onclick="navigate('staff', this)">
+                <i class="ph ph-users-three"></i>
+                Staff Management
+            </a>
+            <a href="#" class="nav-item" onclick="navigate('attendance', this)">
+                <i class="ph ph-calendar-check"></i>
+                Attendance
+            </a>
+            <a href="#" class="nav-item" onclick="navigate('guests', this)">
+                <i class="ph ph-ticket"></i>
+                Guest Pass
+            </a>
+            <a href="#" class="nav-item" onclick="navigate('complaints', this)">
+                <i class="ph ph-warning-octagon"></i>
+                Complaints
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="user-profile">
+                <div class="avatar" id="userAvatar">A</div>
+                <div class="user-info">
+                    <h4 id="userName">Admin User</h4>
+                    <p id="userRoleTxt">Full Access</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="top-header">
+            <button class="icon-btn mobile-menu-btn" onclick="document.querySelector('.sidebar').classList.add('open')"
+                style="display: none;">
+                <i class="ph ph-list"></i>
+            </button>
+            <div class="search-box">
+                <i class="ph ph-magnifying-glass"></i>
+                <input type="text" id="mainSearch" placeholder="Search places, residents, or blocks...">
+            </div>
+
+            <div class="header-actions">
+                <button class="icon-btn">
+                    <i class="ph ph-bell"></i>
+                    <span class="badge"></span>
+                </button>
+                <button class="btn-primary admin-only" onclick="alert('Feature to add new building/place')">
+                    <i class="ph ph-plus"></i>
+                    Add Entity
+                </button>
+            </div>
+        </header>
+
+        <div class="dashboard-container">
+
+            <!-- Buildings Dashboard View -->
+            <div id="view-buildings" class="view-section active">
+                <div class="page-layout-grid">
+                    <div>
+                        <div class="page-title">
+                            <h1>Buildings Dashboard</h1>
+                            <p>Select a block to view detailed floor and place information.</p>
+                        </div>
+                        <!-- Blocks Grid -->
+                        <div class="building-grid" id="blocksContainer">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="sidebar-widgets">
+                        <!-- Holiday & Events Calendar (Refined Style) -->
+                        <div class="card holiday-calendar"
+                            style="padding: 0; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 16px; overflow: hidden;">
+                            <div
+                                style="background: linear-gradient(90deg, var(--primary), #4facfe); color: white; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.9rem; letter-spacing: 0.5px;">
+                                <span><i class="ph-fill ph-calendar" style="margin-right: 8px;"></i> HOLIDAY &
+                                    EVENTS</span>
+                                <i class="ph ph-corners-out" style="cursor: pointer; opacity: 0.8;"></i>
+                            </div>
+
+                            <div
+                                style="padding: 12px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2);">
+                                <div style="display: flex; gap: 4px;">
+                                    <button class="cal-nav-btn"><i class="ph ph-caret-left"></i></button>
+                                    <button class="cal-nav-btn"><i class="ph ph-caret-right"></i></button>
+                                    <button class="cal-nav-btn"
+                                        style="margin-left: 8px; font-size: 0.75rem; font-weight: 600;">Today</button>
+                                </div>
+                                <div id="calFullDate"
+                                    style="font-size: 1.1rem; font-weight: 600; color: var(--text-main); font-family: 'Outfit', sans-serif;">
+                                    05/01/2026</div>
+                                <button
+                                    style="background: var(--primary); color: white; border: none; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; text-transform: uppercase;">Month</button>
+                            </div>
+
+                            <div id="fullCalendarGrid"
+                                style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border);">
+                                <!-- Weekday Headers -->
+                                <div class="cal-day-header">SUN</div>
+                                <div class="cal-day-header">MON</div>
+                                <div class="cal-day-header">TUE</div>
+                                <div class="cal-day-header">WED</div>
+                                <div class="cal-day-header">THU</div>
+                                <div class="cal-day-header">FRI</div>
+                                <div class="cal-day-header">SAT</div>
+                                <!-- Days populated by JS -->
+                            </div>
+                        </div>
+
+                        <div class="card"
+                            style="margin-top: 1.5rem; padding: 1.5rem; background: rgba(0, 230, 118, 0.05); border: 1px solid rgba(0, 230, 118, 0.2); border-radius: 16px; position: relative; overflow: hidden;">
+                            <div style="position: relative; z-index: 1;">
+                                <h4
+                                    style="margin-bottom: 0.5rem; color: #00e676; display: flex; align-items: center; gap: 8px;">
+                                    <i class="ph-fill ph-shield-check"></i> Security Status
+                                </h4>
+                                <p style="font-size: 1.1rem; font-weight: 700; color: white;" id="frontOnDutyCount">0
+                                    Guards Active</p>
+                                <p style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 4px;">Personnel
+                                    currently on duty</p>
+                                <button onclick="navigate('security', document.querySelectorAll('.nav-item')[1])"
+                                    style="margin-top: 1rem; background: rgba(0, 230, 118, 0.1); color: #00e676; border: 1px solid rgba(0, 230, 118, 0.2); padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">View
+                                    Log</button>
+                            </div>
+                        </div>
+
+                        <div class="card"
+                            style="margin-top: 1.5rem; padding: 1.5rem; background: var(--primary-bg); border: 1px solid var(--primary-border); border-radius: 16px; position: relative; overflow: hidden;">
+                            <div style="position: relative; z-index: 1;">
+                                <h4 style="margin-bottom: 0.5rem; color: var(--primary);">Quick Tip</h4>
+                                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.4;">Search
+                                    for "Block A" to quickly filter results!</p>
+                            </div>
+                            <i class="ph ph-lightbulb"
+                                style="position: absolute; right: -10px; bottom: -10px; font-size: 5rem; opacity: 0.05; color: var(--primary);"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Block Details View (Floors & Houses) -->
+            <div id="view-block" class="view-section">
+                <div class="breadcrumbs">
+                    <span onclick="navigate('buildings', document.querySelector('.nav-item'))">Buildings</span>
+                    <i class="ph ph-caret-right"></i>
+                    <span id="crumbBlockName" style="color:var(--text-main); font-weight:600;">Block A</span>
+                </div>
+
+                <div class="card-header" style="margin-bottom:1.5rem;">
+                    <div>
+                        <h2 style="font-size:1.75rem;" id="blockTitle">Block A</h2>
+                        <p style="color:var(--text-muted); font-size:0.9rem;">Floor and Place directory</p>
+                    </div>
+                    <button class="btn-primary admin-only" onclick="alert('Add Place Dialog Opened')">
+                        <i class="ph ph-plus"></i> Add Place
+                    </button>
+                </div>
+
+                <div id="floorsContainer" class="floors-container">
+                    <!-- Dynamically generated floors and houses -->
+                </div>
+            </div>
+
+            <!-- Staff Directory View -->
+            <div id="view-staff" class="view-section">
+                <div class="page-title">
+                    <h1>Staff Directory</h1>
+                    <p>Manage and view all registered workers and personnel.</p>
+                </div>
+
+                <div class="card-header" style="margin-bottom: 1.5rem;">
+                    <div class="search-box" style="width: 100%; max-width: 400px;">
+                        <i class="ph ph-magnifying-glass"></i>
+                        <input type="text" id="staffDirSearch" placeholder="Search staff by name or role...">
+                    </div>
+                    <button class="btn-primary admin-only" onclick="openAddStaffModal()">
+                        <i class="ph ph-user-plus"></i> Add Staff
+                    </button>
+                </div>
+
+                <!-- Category Filter Cards for Directory -->
+                <div class="stats-grid"
+                    style="margin-bottom: 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                    <div class="card cat-tab active" onclick="setStaffCategory('Security', this)"
+                        style="cursor: pointer; padding: 1rem; border: 1px solid var(--primary); background: rgba(99, 102, 241, 0.1); border-radius: 16px; transition: var(--transition); text-align: center;">
+                        <i class="ph-fill ph-shield" style="font-size: 1.5rem; color: var(--primary);"></i>
+                        <h4 style="font-size: 0.9rem; margin-top: 0.5rem;">Security</h4>
+                    </div>
+
+                    <div class="card cat-tab" onclick="setStaffCategory('Housekeeping', this)"
+                        style="cursor: pointer; padding: 1rem; border: 1px solid var(--border); background: transparent; border-radius: 16px; transition: var(--transition); text-align: center;">
+                        <i class="ph-fill ph-broom" style="font-size: 1.5rem; color: var(--text-muted);"></i>
+                        <h4 style="font-size: 0.9rem; margin-top: 0.5rem;">Housekeeping</h4>
+                    </div>
+
+                    <div class="card cat-tab" onclick="setStaffCategory('Maintenance', this)"
+                        style="cursor: pointer; padding: 1rem; border: 1px solid var(--border); background: transparent; border-radius: 16px; transition: var(--transition); text-align: center;">
+                        <i class="ph-fill ph-wrench" style="font-size: 1.5rem; color: var(--text-muted);"></i>
+                        <h4 style="font-size: 0.9rem; margin-top: 0.5rem;">Maintenance</h4>
+                    </div>
+                </div>
+
+                <div id="staffDirectoryGrid" class="building-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Attendance Log View -->
+            <div id="view-attendance" class="view-section">
+                <div class="page-layout-grid">
+                    <div>
+                        <div class="page-title">
+                            <h1>Staff Management</h1>
+                            <p id="attendanceTitle">Daily Attendance Log - May 11, 2026</p>
+                        </div>
+
+                        <!-- Category Filter Cards -->
+                        <div class="stats-grid"
+                            style="margin-bottom: 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                            <div class="card cat-tab active" onclick="setStaffCategory('Security', this)"
+                                style="cursor: pointer; padding: 1.5rem; border: 1px solid var(--primary); background: rgba(99, 102, 241, 0.1); border-radius: 16px; transition: var(--transition); text-align: center;">
+                                <div style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;">
+                                    <i class="ph-fill ph-shield"></i>
+                                </div>
+                                <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem;">Security</h3>
+                                <p style="font-size: 0.8rem; color: var(--text-muted);">Guard & Patrol</p>
+                            </div>
+
+                            <div class="card cat-tab" onclick="setStaffCategory('Housekeeping', this)"
+                                style="cursor: pointer; padding: 1.5rem; border: 1px solid var(--border); background: transparent; border-radius: 16px; transition: var(--transition); text-align: center;">
+                                <div style="font-size: 2rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                                    <i class="ph-fill ph-broom"></i>
+                                </div>
+                                <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem;">Housekeeping</h3>
+                                <p style="font-size: 0.8rem; color: var(--text-muted);">Cleaning & Upkeep</p>
+                            </div>
+
+                            <div class="card cat-tab" onclick="setStaffCategory('Maintenance', this)"
+                                style="cursor: pointer; padding: 1.5rem; border: 1px solid var(--border); background: transparent; border-radius: 16px; transition: var(--transition); text-align: center;">
+                                <div style="font-size: 2rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                                    <i class="ph-fill ph-wrench"></i>
+                                </div>
+                                <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem;">Maintenance</h3>
+                                <p style="font-size: 0.8rem; color: var(--text-muted);">Repairs & Utility</p>
+                            </div>
+                        </div>
+
+                        <!-- Security Stats -->
+                        <div class="stats-grid"
+                            style="margin-bottom: 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                            <div class="card stat-card"
+                                style="padding: 1.25rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; gap: 1rem;">
+                                <div
+                                    style="width: 45px; height: 45px; border-radius: 10px; background: rgba(79, 172, 254, 0.1); color: #4facfe; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                    <i class="ph ph-users"></i>
+                                </div>
+                                <div>
+                                    <h4 id="statTotalStaff" style="font-size: 1.5rem; font-weight: 700;">0</h4>
+                                    <p style="font-size: 0.8rem; color: var(--text-muted);">Total Staff</p>
+                                </div>
+                            </div>
+                            <div class="card stat-card"
+                                style="padding: 1.25rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; gap: 1rem;">
+                                <div
+                                    style="width: 45px; height: 45px; border-radius: 10px; background: rgba(0, 230, 118, 0.1); color: #00e676; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                    <i class="ph ph-user-circle-gear"></i>
+                                </div>
+                                <div>
+                                    <h4 id="statOnDuty" style="font-size: 1.5rem; font-weight: 700;">0</h4>
+                                    <p style="font-size: 0.8rem; color: var(--text-muted);">Currently On Duty</p>
+                                </div>
+                            </div>
+                            <div class="card stat-card"
+                                style="padding: 1.25rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; gap: 1rem;">
+                                <div
+                                    style="width: 45px; height: 45px; border-radius: 10px; background: rgba(255, 152, 0, 0.1); color: #ff9800; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                    <i class="ph ph-clock"></i>
+                                </div>
+                                <div>
+                                    <h4 id="statTotalHours" style="font-size: 1.5rem; font-weight: 700;">0h</h4>
+                                    <p style="font-size: 0.8rem; color: var(--text-muted);">Total Duty Hours</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card"
+                            style="padding: 1.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px;">
+                            <div class="card-header"
+                                style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                                <h3 id="staffLogTitle">Staff on Duty</h3>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn-primary admin-only" onclick="openAttendanceModal()">
+                                        <i class="ph ph-check-square"></i> Mark Attendance
+                                    </button>
+                                    <button class="btn-secondary" onclick="downloadStaffLog()">
+                                        <i class="ph ph-download-simple"></i> Download Log
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-container" style="overflow-x: auto;">
+                                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                                    <thead>
+                                        <tr
+                                            style="border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 0.9rem;">
+                                            <th style="padding: 1rem;">Staff</th>
+
+                                            <th style="padding: 1rem;">Role</th>
+                                            <th style="padding: 1rem;">In Time</th>
+                                            <th style="padding: 1rem;">Out Time</th>
+                                            <th style="padding: 1rem;">Duty Hours</th>
+                                            <th style="padding: 1rem;">Contact</th>
+                                            <th style="padding: 1rem;">Status</th>
+                                            <th style="padding: 1rem;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="staffLogBody">
+                                        <!-- Populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-widgets">
+                        <!-- Reusable Holiday & Events Calendar -->
+                        <div id="securityCalendar" class="card holiday-calendar"
+                            style="padding: 0; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 16px; overflow: hidden;">
+                            <div
+                                style="background: linear-gradient(90deg, var(--primary), #4facfe); color: white; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.9rem; letter-spacing: 0.5px;">
+                                <span><i class="ph-fill ph-calendar" style="margin-right: 8px;"></i> SELECT DATE</span>
+                            </div>
+                            <div
+                                style="padding: 10px; border-bottom: 1px solid var(--border); display: flex; justify-content: center; background: rgba(0,0,0,0.2);">
+                                <div id="secCalFullDate"
+                                    style="font-size: 1rem; font-weight: 600; color: var(--text-main);">05/01/2026</div>
+                            </div>
+                            <div id="secCalendarGrid"
+                                style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border);">
+                                <div class="cal-day-header">S</div>
+                                <div class="cal-day-header">M</div>
+                                <div class="cal-day-header">T</div>
+                                <div class="cal-day-header">W</div>
+                                <div class="cal-day-header">T</div>
+                                <div class="cal-day-header">F</div>
+                                <div class="cal-day-header">S</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Guest Pass View -->
+            <div id="view-guests" class="view-section">
+                <div class="page-title">
+                    <h1>Guest Pass Management</h1>
+                    <p>Issue and track digital entry passes for visitors.</p>
+                </div>
+
+                <div class="page-layout-grid">
+                    <!-- Left Column: Active Passes -->
+                    <div class="card"
+                        style="padding: 1.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px;">
+                        <div class="card-header" style="margin-bottom: 1.5rem;">
+                            <h3>Active & Recent Passes</h3>
+                            <button class="btn-primary" onclick="openGuestPassModal()">
+                                <i class="ph ph-qrcode"></i> Generate Pass
+                            </button>
+                        </div>
+                        <div class="table-container" style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                                <thead>
+                                    <tr
+                                        style="border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 0.9rem;">
+                                        <th style="padding: 1rem;">Guest Name</th>
+                                        <th style="padding: 1rem;">Target Unit</th>
+                                        <th style="padding: 1rem;">Valid Until</th>
+                                        <th style="padding: 1rem;">Pass Code</th>
+                                        <th style="padding: 1rem;">Status</th>
+                                        <th style="padding: 1rem;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="guestPassBody">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Verification Panel -->
+                    <div class="sidebar-widgets">
+                        <div class="card"
+                            style="padding: 1.5rem; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 16px;">
+                            <h3
+                                style="margin-bottom: 1rem; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                                <i class="ph ph-shield-check" style="color: var(--primary);"></i> Gate Verification
+                            </h3>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+                                Scan the guest's QR code with your mobile, then enter the OTP below to verify entry
+                                credentials.
+                            </p>
+
+                            <div class="info-group"
+                                style="flex-direction: column; border: none; margin-bottom: 1.25rem; padding: 0;">
+                                <label
+                                    style="margin-bottom: 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Enter
+                                    Scanned OTP</label>
+                                <input type="text" id="verifyGuestOTPInput" placeholder="Enter 4-digit code"
+                                    maxlength="4"
+                                    style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none; font-size: 1.15rem; font-weight: 700; letter-spacing: 2px; text-align: center; font-family: monospace;">
+                            </div>
+
+                            <button class="btn-primary" onclick="verifyGuestOTP()"
+                                style="width: 100%; justify-content: center; margin-bottom: 1.5rem;">
+                                <i class="ph ph-fingerprint"></i> Verify & Check-In
+                            </button>
+
+                            <!-- Result Box -->
+                            <div id="otpVerifyResult"
+                                style="display: none; padding: 1rem; border-radius: 10px; border: 1px solid transparent;">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complaints View -->
+            <div id="view-complaints" class="view-section">
+                <div class="page-title"
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div>
+                        <h1>Complaints Management</h1>
+                        <p>Track, assign, and resolve resident complaints & maintenance requests.</p>
+                    </div>
+                    <button class="btn-primary" onclick="openComplaintModal()">
+                        <i class="ph ph-warning-octagon"></i> File Complaint
+                    </button>
+                </div>
+
+                <!-- Stats Cards for Complaints -->
+                <div class="stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card" style="border-left: 4px solid var(--text-muted);">
+                        <div class="stat-icon" style="background: rgba(255,255,255,0.05); color: var(--text-muted);">
+                            <i class="ph ph-warning"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="statTotalComplaints">0</h3>
+                            <p>Total Filed</p>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="border-left: 4px solid var(--danger);">
+                        <div class="stat-icon" style="background: var(--danger-bg); color: var(--danger);">
+                            <i class="ph ph-clock-counter-clockwise"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="statPendingComplaints">0</h3>
+                            <p>Pending</p>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="border-left: 4px solid var(--warning);">
+                        <div class="stat-icon" style="background: var(--warning-bg); color: var(--warning);">
+                            <i class="ph ph-wrench"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="statInProgressComplaints">0</h3>
+                            <p>In Progress</p>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="border-left: 4px solid var(--success);">
+                        <div class="stat-icon" style="background: var(--success-bg); color: var(--success);">
+                            <i class="ph ph-check-square"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="statResolvedComplaints">0</h3>
+                            <p>Resolved</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Complaints Table Card -->
+                <div class="card"
+                    style="padding: 1.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px;">
+                    <div class="card-header" style="margin-bottom: 1.5rem;">
+                        <h3>Registered Complaints</h3>
+                    </div>
+                    <div class="table-container" style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                            <thead>
+                                <tr
+                                    style="border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 0.9rem;">
+                                    <th style="padding: 1rem;">ID</th>
+                                    <th style="padding: 1rem;">Complaint Details</th>
+                                    <th style="padding: 1rem;">Location / Unit</th>
+                                    <th style="padding: 1rem;">Severity</th>
+                                    <th style="padding: 1rem;">Date Filed</th>
+                                    <th style="padding: 1rem;">Status</th>
+                                    <th style="padding: 1rem;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="complaintsTableBody">
+                                <!-- Populated dynamically by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Place Detail Modal -->
+    <div id="houseModal" class="modal-overlay">
+        <div class="modal house-modal">
+            <div class="modal-header">
+                <h2>Place Details <span id="mdlHouseNo" class="badge-tag">101</span></h2>
+                <button class="icon-btn" onclick="closeHouseModal()"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="info-group"><label>Owner Name</label>
+                    <div id="mdlOwner">John Doe</div>
+                </div>
+                <div class="info-group"><label>Mail ID</label>
+                    <div id="mdlEmail">owner@example.com</div>
+                </div>
+                <div class="info-group"><label>Resident Type</label>
+                    <div id="mdlType">Family</div>
+                </div>
+                <div class="info-group"><label>Owner Number</label>
+                    <div id="mdlPhone">+91 0000000000</div>
+                </div>
+            </div>
+            <div class="modal-footer admin-only">
+                <button class="btn-secondary" onclick="alert('Edit action')">Edit Details</button>
+                <button class="btn-primary" onclick="alert('Save action')">Update Info</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="staffDetailsModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Staff Profile</h2>
+                <button class="icon-btn" onclick="closeStaffDetailsModal()"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <div
+                    style="position: relative; display: inline-block; margin-bottom: 1rem; width: 120px; height: 120px;">
+                    <video id="profileVideo" autoplay playsinline
+                        style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--primary); object-fit: cover; display: none;"></video>
+                    <canvas id="profileCanvas" style="display: none;"></canvas>
+                    <img id="sdPhoto" src=""
+                        style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--primary); object-fit: cover;">
+                    <button id="profileCameraToggleBtn" onclick="toggleProfileCamera()"
+                        style="position: absolute; bottom: 0; right: 0; background: var(--primary); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; box-shadow: 0 2px 8px rgba(0,0,0,0.4); z-index: 10;">
+                        <i class="ph ph-camera" id="profileCameraIcon"></i>
+                    </button>
+                </div>
+                <div id="profileCaptureControls"
+                    style="display: none; gap: 0.5rem; justify-content: center; margin-bottom: 1rem;">
+                    <button class="btn-primary" onclick="captureProfilePhoto()"
+                        style="font-size: 0.75rem; padding: 0.3rem 0.6rem; background: var(--success);">Capture</button>
+                    <button class="btn-secondary" onclick="cancelProfileCamera()"
+                        style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">Cancel</button>
+                </div>
+                <h3 id="sdName" style="font-size: 1.5rem; margin-bottom: 0.25rem;">Name</h3>
+                <p id="sdRole" style="color: var(--primary); font-weight: 600; margin-bottom: 1.5rem;">Role</p>
+
+                <div style="text-align: left;">
+                    <div class="info-group"><label>Staff ID</label>
+                        <div id="sdEmpId" style="font-weight: 600; font-family: monospace; color: var(--text-main);">
+                            EMP-000</div>
+                    </div>
+                    <div class="info-group"><label>Security Passcode</label>
+                        <div id="sdPasscode" style="font-weight: 600; font-family: monospace; color: var(--warning);">
+                            0000</div>
+                    </div>
+                    <div class="info-group"><label>Age</label>
+                        <div id="sdAge">30</div>
+                    </div>
+                    <div class="info-group"><label>Gender</label>
+                        <div id="sdGender">Male</div>
+                    </div>
+                    <div class="info-group"><label>Contact</label>
+                        <div id="sdContact">+91 0000000000</div>
+                    </div>
+                    <div class="info-group"><label>Address</label>
+                        <div id="sdAddress">123 Street, City</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generate Guest Pass Modal -->
+    <div id="guestPassModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Generate Visitor Pass</h2>
+                <button class="icon-btn" onclick="closeGuestPassModal()"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">Guest Photo (Live Capture)</label>
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <div id="guestCameraPreviewContainer"
+                            style="width: 100px; height: 100px; border-radius: 12px; background: rgba(0,0,0,0.4); border: 2px dashed var(--border); overflow: hidden; position: relative; display:flex; align-items:center; justify-content:center;">
+                            <video id="guestVideo" autoplay playsinline
+                                style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
+                            <canvas id="guestCanvas"
+                                style="display: none; width: 100%; height: 100%; object-fit: cover;"></canvas>
+                            <img id="guestCapturedPhoto"
+                                style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                            <i class="ph ph-user" id="guestCameraPlaceholder"
+                                style="font-size: 2.5rem; color: var(--border);"></i>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <button class="btn-secondary" onclick="startGuestCamera()"
+                                style="font-size: 0.75rem; padding: 0.4rem 0.8rem;">
+                                <i class="ph ph-camera"></i> Live Photo
+                            </button>
+                            <button id="guestCaptureBtn" class="btn-primary" onclick="captureGuestPhoto()"
+                                style="display: none; font-size: 0.75rem; padding: 0.4rem 0.8rem; background: var(--success);">
+                                <i class="ph ph-record"></i> Capture
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">Guest Full Name</label>
+                    <input type="text" id="newGuestName" placeholder="Enter Guest Name"
+                        style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+                </div>
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">Place / Unit Number</label>
+                    <input type="text" id="newGuestUnit" placeholder="e.g., A-1002"
+                        style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+                </div>
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">Resident / Owner</label>
+                    <input type="text" id="newGuestOwner" placeholder="Auto-populated resident name" readonly
+                        style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: var(--primary); font-weight: 600; outline: none;">
+                </div>
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">Visitor From (Location/Company)</label>
+                    <input type="text" id="newGuestFrom" placeholder="e.g., Bangalore, Swiggy, ABC Corp"
+                        style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+                </div>
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">Entry Gate</label>
+                    <select id="newGuestGate"
+                        style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none; appearance: none;">
+                        <option value="Main Gate">Main Gate</option>
+                        <option value="North Gate">North Gate</option>
+                        <option value="South Gate">South Gate</option>
+                        <option value="Service Entry">Service Entry</option>
+                    </select>
+                </div>
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">Valid Date</label>
+                    <input type="date" id="newGuestDate"
+                        style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+                </div>
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">Pass Code / OTP (Optional, 4 digits)</label>
+                    <input type="text" id="newGuestCodeInput" placeholder="Leave blank to auto-generate" maxlength="4"
+                        style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none; font-family: monospace;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeGuestPassModal()">Cancel</button>
+                <button class="btn-primary" onclick="saveGuestPass()">Generate & Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Digital ID Pass Preview Modal -->
+    <div id="passPreviewModal" class="modal-overlay">
+        <div class="modal"
+            style="max-width: 400px; padding: 0; background: transparent; border: none; box-shadow: none;">
+            <div id="digitalIDCard"
+                style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); width: 100%; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); padding: 25px; position: relative; overflow: hidden;">
+                <!-- Branding -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="ph-fill ph-buildings" style="color: var(--primary); font-size: 1.5rem;"></i>
+                        <span
+                            style="font-weight: 800; letter-spacing: 1px; color: white; font-size: 0.9rem;">URBANRISE</span>
+                    </div>
+                    <div
+                        style="background: rgba(0, 230, 118, 0.2); color: #00e676; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Visitor Pass</div>
+                </div>
+
+                <!-- Guest Info -->
+                <div style="display: flex; gap: 20px; margin-bottom: 25px;">
+                    <div
+                        style="width: 100px; height: 100px; border-radius: 15px; border: 2px solid var(--primary); overflow: hidden; background: rgba(0,0,0,0.3);">
+                        <img id="idGuestPhoto" src="" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div style="flex: 1;">
+                        <p
+                            style="color: rgba(255,255,255,0.5); font-size: 0.7rem; text-transform: uppercase; margin-bottom: 2px;">
+                            Guest Name</p>
+                        <h3 id="idGuestName" style="color: white; font-size: 1.2rem; margin-bottom: 10px;">John Doe</h3>
+                        <p
+                            style="color: rgba(255,255,255,0.5); font-size: 0.7rem; text-transform: uppercase; margin-bottom: 2px;">
+                            Visiting Unit</p>
+                        <h4 id="idGuestUnit" style="color: var(--primary); font-size: 1.1rem; margin-bottom: 10px;">A -
+                            1002</h4>
+                        <p
+                            style="color: rgba(255,255,255,0.5); font-size: 0.7rem; text-transform: uppercase; margin-bottom: 2px;">
+                            Resident Name</p>
+                        <h4 id="idGuestOwner" style="color: white; font-size: 1rem; margin-bottom: 10px;">Rahul Dravid
+                        </h4>
+                        <p
+                            style="color: rgba(255,255,255,0.5); font-size: 0.7rem; text-transform: uppercase; margin-bottom: 2px;">
+                            Visitor From</p>
+                        <h4 id="idGuestFrom" style="color: white; font-size: 0.9rem; margin-bottom: 10px;">Bangalore
+                        </h4>
+                        <p
+                            style="color: rgba(255,255,255,0.5); font-size: 0.7rem; text-transform: uppercase; margin-bottom: 2px;">
+                            Entry Gate</p>
+                        <h4 id="idGuestGate" style="color: #00e676; font-size: 0.9rem;">Main Gate</h4>
+                    </div>
+                </div>
+
+                <!-- QR & Pass Code -->
+                <div
+                    style="background: rgba(255,255,255,0.03); border-radius: 15px; padding: 15px; display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <p
+                            style="color: rgba(255,255,255,0.5); font-size: 0.7rem; text-transform: uppercase; margin-bottom: 5px;">
+                            Verification OTP</p>
+                        <span id="idGuestCode"
+                            style="color: white; font-size: 1.5rem; font-weight: 800; letter-spacing: 4px; font-family: monospace;">8829</span>
+                    </div>
+                    <div
+                        style="width: 110px; height: 110px; background: white; border-radius: 12px; padding: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                        <img id="idGuestQRCode" src="" style="width: 100%; height: 100%; object-fit: contain;">
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 10px;">
+                    <div
+                        style="display: flex; justify-content: space-between; font-size: 0.7rem; color: rgba(255,255,255,0.4);">
+                        <span id="idGuestDate">Valid Until: 2026-05-11</span>
+                        <span id="idEntryTime">Entry: 10:30 AM</span>
+                    </div>
+                    <div
+                        style="display: flex; justify-content: center; font-size: 0.7rem; color: rgba(255,255,255,0.6); font-weight: 600; letter-spacing: 1px;">
+                        <i class="ph-fill ph-seal-check" style="color: #00e676; margin-right: 4px;"></i> SECURITY
+                        VERIFIED
+                    </div>
+                </div>
+
+                <!-- Decorative Glow -->
+                <div
+                    style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: var(--primary); opacity: 0.1; filter: blur(50px); border-radius: 50%;">
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <button class="btn-primary" onclick="closePassPreview()"
+                    style="flex: 1; height: 45px; border-radius: 12px; font-weight: 700;">Done</button>
+                <button class="btn-secondary" onclick="window.print()"
+                    style="width: 50px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center;"><i
+                        class="ph ph-printer"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Staff Modal -->
+    <div id="staffModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Add New Staff</h2>
+                <button class="icon-btn" onclick="closeStaffModal()"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">Staff Photo</label>
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <div id="staffCameraPreviewContainer"
+                            style="width: 100px; height: 100px; border-radius: 12px; background: rgba(0,0,0,0.4); border: 2px dashed var(--border); overflow: hidden; position: relative; display:flex; align-items:center; justify-content:center;">
+                            <video id="staffVideo" autoplay playsinline
+                                style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
+                            <canvas id="staffCanvas"
+                                style="display: none; width: 100%; height: 100%; object-fit: cover;"></canvas>
+                            <img id="capturedPhoto"
+                                style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                            <i class="ph ph-user" id="cameraPlaceholder"
+                                style="font-size: 2.5rem; color: var(--border);"></i>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <button class="btn-secondary" onclick="startCamera()"
+                                style="font-size: 0.75rem; padding: 0.4rem 0.8rem;">
+                                <i class="ph ph-camera"></i> Live Photo
+                            </button>
+                            <button id="captureBtn" class="btn-primary" onclick="capturePhoto()"
+                                style="display: none; font-size: 0.75rem; padding: 0.4rem 0.8rem; background: var(--success);">
+                                <i class="ph ph-record"></i> Capture
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">Full Name</label>
+                    <input type="text" id="newStaffName" placeholder="Enter Full Name"
+                        style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+                </div>
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">Department</label>
+                    <select id="newStaffCategory"
+                        style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none; appearance: none;">
+                        <option value="Security">Security</option>
+                        <option value="Housekeeping">Housekeeping</option>
+                        <option value="Maintenance">Maintenance</option>
+                    </select>
+                </div>
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">Role</label>
+                    <input type="text" id="newStaffRole" placeholder="e.g., Security Guard, Plumber"
+                        style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+                </div>
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">Contact Number</label>
+                    <input type="text" id="newStaffContact" placeholder="+91 00000 00000"
+                        style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeStaffModal()">Cancel</button>
+                <button class="btn-primary" onclick="saveNewStaff()">Register Staff</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mark Attendance Modal -->
+    <div id="attendanceModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Mark Attendance</h2>
+                <button class="icon-btn" onclick="closeAttendanceModal()"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">Select Staff</label>
+                    <select id="attStaffSelect"
+                        style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none; appearance: none;">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">Verification (Live Photo or Code)</label>
+                    <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 0.5rem;">
+                        <div id="attCameraPreviewContainer"
+                            style="width: 100px; height: 100px; border-radius: 12px; background: rgba(0,0,0,0.4); border: 2px dashed var(--border); overflow: hidden; position: relative; display:flex; align-items:center; justify-content:center;">
+                            <video id="attVideo" autoplay playsinline
+                                style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
+                            <canvas id="attCanvas"
+                                style="display: none; width: 100%; height: 100%; object-fit: cover;"></canvas>
+                            <img id="attCapturedPhoto"
+                                style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                            <i class="ph ph-user-focus" id="attCameraPlaceholder"
+                                style="font-size: 2.5rem; color: var(--border);"></i>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <button class="btn-secondary" onclick="startAttCamera()"
+                                style="font-size: 0.75rem; padding: 0.4rem 0.8rem;">
+                                <i class="ph ph-camera"></i> Start Camera
+                            </button>
+                            <button id="attCaptureBtn" class="btn-primary" onclick="captureAttPhoto()"
+                                style="display: none; font-size: 0.75rem; padding: 0.4rem 0.8rem; background: var(--success);">
+                                <i class="ph ph-record"></i> Capture
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.5rem;">
+                        OR</div>
+                    <input type="text" id="attVerifyCode" placeholder="Enter 4-Digit Verification Code"
+                        style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none; letter-spacing: 2px; text-align: center; font-weight: 600;">
+                </div>
+                <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                    <label style="margin-bottom: 0.5rem;">In Time</label>
+                    <input type="time" id="attInTime"
+                        style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none; color-scheme: dark;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeAttendanceModal()">Cancel</button>
+                <button class="btn-primary" onclick="saveAttendance()">Mark Present</button>
+            </div>
+        </div>
+        <!-- File Complaint Modal -->
+        <div id="complaintModal" class="modal-overlay">
+            <div class="modal" style="max-height: 90vh; overflow-y: auto;">
+                <div class="modal-header">
+                    <h2>File a New Complaint</h2>
+                    <button class="icon-btn" onclick="closeComplaintModal()"><i class="ph ph-x"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                        <label style="margin-bottom: 0.5rem;">Unit / Flat Number</label>
+                        <input type="text" id="newComplaintUnit" placeholder="e.g., A-1002"
+                            style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+                    </div>
+                    <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                        <label style="margin-bottom: 0.5rem;">Resident / Owner</label>
+                        <input type="text" id="newComplaintResident" placeholder="Auto-populated resident name" readonly
+                            style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: var(--primary); font-weight: 600; outline: none;">
+                    </div>
+                    <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                        <label style="margin-bottom: 0.5rem;">Category</label>
+                        <select id="newComplaintCategory"
+                            style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none; appearance: none;">
+                            <option value="Plumbing">Plumbing</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Security">Security</option>
+                            <option value="Cleaning">Cleaning</option>
+                            <option value="General Maintenance">General Maintenance</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                    <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                        <label style="margin-bottom: 0.5rem;">Severity Level</label>
+                        <select id="newComplaintSeverity"
+                            style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none; appearance: none;">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Critical">Critical</option>
+                        </select>
+                    </div>
+                    <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                        <label style="margin-bottom: 0.5rem;">Complaint Title</label>
+                        <input type="text" id="newComplaintTitle" placeholder="e.g., Corridor light flickering"
+                            style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+                    </div>
+                    <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                        <label style="margin-bottom: 0.5rem;">Detailed Description</label>
+                        <textarea id="newComplaintDesc" placeholder="Explain the problem in detail..." rows="3"
+                            style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none; resize: vertical; font-family: inherit;"></textarea>
+                    </div>
+                    <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                        <label style="margin-bottom: 0.5rem;">Date Filed</label>
+                        <input type="date" id="newComplaintDate"
+                            style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeComplaintModal()">Cancel</button>
+                    <button class="btn-primary" onclick="saveComplaint()">File Complaint</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complaint Detail & Resolution Modal -->
+        <div id="complaintDetailModal" class="modal-overlay">
+            <div class="modal" style="max-height: 90vh; overflow-y: auto;">
+                <div class="modal-header">
+                    <h2>Complaint Resolution <span id="detailComplaintId" class="badge-tag"
+                            style="background: var(--primary);">CP101</span></h2>
+                    <button class="icon-btn" onclick="closeComplaintDetailModal()"><i class="ph ph-x"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                        <h3 id="detailComplaintTitle" style="color: white; margin-bottom: 0.5rem; font-size: 1.2rem;">
+                            Water Leakage Issue</h3>
+                        <p id="detailComplaintDesc"
+                            style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">This is a detailed
+                            explanation of the plumbing issue.</p>
+                    </div>
+
+                    <div class="page-layout-grid"
+                        style="grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div class="info-group" style="flex-direction: column; border: none; padding: 0;">
+                            <label
+                                style="font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem;">Location
+                                / Unit</label>
+                            <div id="detailComplaintUnit" style="font-weight: 600; color: white;">A-1002</div>
+                        </div>
+                        <div class="info-group" style="flex-direction: column; border: none; padding: 0;">
+                            <label
+                                style="font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem;">Resident
+                                Name</label>
+                            <div id="detailComplaintResident" style="font-weight: 600; color: white;">Resident 1002
+                            </div>
+                        </div>
+                        <div class="info-group" style="flex-direction: column; border: none; padding: 0;">
+                            <label
+                                style="font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem;">Category</label>
+                            <div id="detailComplaintCategory" style="font-weight: 600; color: white;">Plumbing</div>
+                        </div>
+                        <div class="info-group" style="flex-direction: column; border: none; padding: 0;">
+                            <label style="font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem;">Date
+                                Filed</label>
+                            <div id="detailComplaintDate" style="font-weight: 600; color: white;">2026-06-02</div>
+                        </div>
+                    </div>
+
+                    <div class="info-group"
+                        style="flex-direction: column; border: none; margin-bottom: 1rem; padding: 0;">
+                        <label style="margin-bottom: 0.5rem;">Severity Level</label>
+                        <span id="detailComplaintSeverityBadge"
+                            style="padding: 0.3rem 0.6rem; border-radius: 4px; font-weight: 700; font-size: 0.85rem; width: max-content; display: inline-block;">High</span>
+                    </div>
+
+                    <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1.25rem;">
+                        <label style="margin-bottom: 0.5rem;">Update Action Status</label>
+                        <select id="detailComplaintStatusSelect"
+                            style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none; appearance: none;">
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                        </select>
+                    </div>
+
+                    <div class="info-group" style="flex-direction: column; border: none; margin-bottom: 1rem;">
+                        <label style="margin-bottom: 0.5rem;">Assign Maintenance Staff</label>
+                        <select id="detailComplaintAssignStaff"
+                            style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none; appearance: none;">
+                            <!-- Filled dynamically with maintenance / housekeeping staff -->
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeComplaintDetailModal()">Close</button>
+                    <button class="btn-primary" onclick="saveComplaintDetails()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="index.js"></script>
+
+</body>
+
+</html>
